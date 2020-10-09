@@ -1,8 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import AbsoluteUrl from 'next-absolute-url'
-import NextCookies from 'next-cookies'
-import _ from 'lodash'
 
 import Layout from '../components/layout/layout'
 
@@ -25,18 +23,8 @@ export default function Index(props) {
   )
 }
 
-export async function getServerSideProps(ctx) {
-  const { req, res } = ctx;
-
+export async function getServerSideProps({ req, res }) {
   const { origin } = AbsoluteUrl(req, 'localhost:3000');
-  const session = NextCookies(ctx).session;
 
-  const props = {};
-
-  props.origin = origin;
-
-  if (session)
-    props.session = session;
-
-  return { props }
+  return { props: { origin } }
 }

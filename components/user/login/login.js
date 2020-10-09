@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react'
-import { useRouter } from 'next/router'
 
 import { Button, Form } from 'react-bootstrap'
 import { FaTimes } from 'react-icons/fa'
@@ -12,8 +11,7 @@ let loginMsgId, forgotMsgId;
 import styles from './login.module.css';
 
 const Login = (props) => {
-  const router = useRouter();
-
+  const [ user, updateUser, clearUser ] = props.useUser;
   const [ isLoggingIn, setIsLoggingIn ] = useState(false);
   const [ isSendingRecovery, setIsSendingRecovery ] = useState(false);
 
@@ -42,7 +40,7 @@ const Login = (props) => {
       if (props.onDone)
         props.onDone();
 
-      router.reload();
+      updateUser();
     }
 
     else {

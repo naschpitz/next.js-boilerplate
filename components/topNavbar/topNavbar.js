@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Alert from 'react-s-alert'
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
 import { UniqueModalController } from '@naschpitz/unique-modal'
 import _ from 'lodash'
 
@@ -9,40 +7,17 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 'react-icons/fa'
 
 import ChangePassword from '../user/changePassword/changePassword'
-import Fetcher from '../../lib/fetcher'
 import Login from '../user/login/login'
 import Register from '../user/register/register'
 import ResetPassword from '../user/resetPassword/resetPassword'
 
 const TopNavbar = (props) => {
-  const router = useRouter();
-
-  const [ user, setUser ] = useState();
+  const [ user, updateUser, clearUser ] = props.useUser;
 
   const session = props.session;
   const passwordResetToken = _.get(session, 'passwordResetToken');
 
   checkPasswordResetToken();
-
-  useEffect(() => { getUserInfo() }, []);
-
-  async function getUserInfo() {
-    if (!session)
-      return;
-
-    const response = await Fetcher.fetch('/api/user/info', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    }, props.origin);
-
-    if (!response.ok)
-      Alert.error("Oops, an error occurred while retrieving user info.");
-
-    else {
-      const result = await response.json();
-      setUser(result.user);
-    }
-  }
 
   function checkPasswordResetToken() {
     if (!!passwordResetToken) {
@@ -65,7 +40,7 @@ const TopNavbar = (props) => {
       <Nav className="ml-auto">
         {loginButton()}
 
-        {!session ?
+        {!user ?
           <>
             <Nav.Item>
               <Nav.Link href="#" onClick={onRegisterClick}>
@@ -162,7 +137,7 @@ const TopNavbar = (props) => {
       Alert.error("Oops, an error occurred during logout, please try again.");
 
     else
-      router.reload();
+      clearUser();
   }
 
   function onResetPasswordClick()
