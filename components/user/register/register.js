@@ -107,11 +107,8 @@ const Register = (props) => {
 
       <MessageDisplay ref={messageDisplayRef}/>
 
-      <Button block disabled={!canRegister()} type="submit">
-        {isRegistering ?
-          <div>Registering...</div> :
-          <div>Register</div>
-        }
+      <Button type="submit" block disabled={!canRegister()}>
+        {isRegistering ? "Registering..." : "Register"}
       </Button>
 
       <div className={styles.blockClose}>

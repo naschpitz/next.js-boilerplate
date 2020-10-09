@@ -6,7 +6,7 @@ import { FaTimes } from 'react-icons/fa'
 import MessageDisplay from '../../messageDisplay/messageDisplay'
 import PasswordFields from '../passwordFields/passwordsFields'
 
-import styles from './resetPassword.module.css';
+import styles from './resetPassword.module.css'
 
 let resetMsgId, passwordMsgId;
 

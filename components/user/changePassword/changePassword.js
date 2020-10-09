@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap'
 
+import Fetcher from '../../../lib/fetcher'
 import MessageDisplay from '../../messageDisplay/messageDisplay'
 import PasswordFields from '../passwordFields/passwordsFields'
 
@@ -10,14 +11,14 @@ import styles from './changePassword.module.css'
 let changeMsgId, passwordMsgId;
 
 const ChangePassword = (props) => {
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [password, setPassword] = useState("");
+  const [ isChangingPassword, setIsChangingPassword ] = useState(false);
+  const [ password, setPassword ] = useState("");
 
   const messageDisplayRef = useRef(null);
   const oldPasswordRef = useRef(null);
   const passwordFieldsRef = useRef(null);
 
-  function onFormSubmit(event) {
+  async function onFormSubmit(event) {
     event.preventDefault();
 
     const oldPassword = oldPasswordRef.current.value;
@@ -26,25 +27,23 @@ const ChangePassword = (props) => {
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(changeMsgId);
 
-    try {
-      setIsChangingPassword(true);
+    setIsChangingPassword(true);
+
+    const response = await Fetcher.fetch('/api/user/changePassword', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldPassword, newPassword })
+    }, props.origin);
+
+    if (response.ok)
+      changeMsgId = messageDisplay.show('success', "Password changed successfully.", changeMsgId);
+
+    else {
+      const error = await response.json();
+      changeMsgId = messageDisplay.show('error', "Error changing password: " + error.message, changeMsgId);
     }
 
-    catch (error) {
-
-    }
-
-    function callback(error) {
-      if (error)
-        changeMsgId = messageDisplay.show('error', "Error changing password: " + getErrorMessage(error), changeMsgId);
-
-      else
-        changeMsgId = messageDisplay.show('success', "Password changed successfully.", changeMsgId);
-
-      setIsChangingPassword(false);
-    }
-
-    Session.set('passwordResetToken', undefined);
+    setIsChangingPassword(false);
   }
 
   function onPasswordChange(password) {
@@ -66,10 +65,7 @@ const ChangePassword = (props) => {
   }
 
   function canChange() {
-    if (!password)
-      return false;
-
-    return true;
+    return !!password;
   }
 
   return (
@@ -83,13 +79,8 @@ const ChangePassword = (props) => {
 
       <MessageDisplay ref={messageDisplayRef}/>
 
-      <Button type="submit" disabled={!canChange()}>
-        {isChangingPassword ?
-          <div>
-            Changing password...
-          </div> :
-          <div>Change Password</div>
-        }
+      <Button type="submit" block disabled={!canChange()}>
+        {isChangingPassword ? "Changing password..." : "Change Password"}
       </Button>
 
       <div className={styles.blockClose}>

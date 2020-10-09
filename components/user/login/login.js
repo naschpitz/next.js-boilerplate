@@ -22,19 +22,19 @@ const Login = (props) => {
   async function onFormSubmit(event) {
     event.preventDefault();
 
-    setIsLoggingIn(true);
-
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+
+    const messageDisplay = messageDisplayRef.current;
+    messageDisplay.hide(loginMsgId);
+
+    setIsLoggingIn(true);
 
     const response = await Fetcher.fetch('/api/user/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     }, props.origin);
-
-    const messageDisplay = messageDisplayRef.current;
-    messageDisplay.hide(loginMsgId);
 
     if (response.ok) {
       if (props.onDone)
