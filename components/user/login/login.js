@@ -78,7 +78,7 @@ const Login = (props) => {
     const response = await Fetcher.fetch('/api/user/forgotPassword', options, context.origin);
 
     if (response.ok) {
-      const message = <span id="forgotMsg">An e-mail for password recovery has been sent to the registered address. Please check your <strong>SPAM</strong> box you if don't receive it in a few minutes.</span>
+      const message = <span>An e-mail for password recovery has been sent to the registered address. Please check your <strong>SPAM</strong> box you if don't receive it in a few minutes.</span>
       forgotMsgId = messageDisplay.show('success', message, forgotMsgId);
     }
 
@@ -109,7 +109,7 @@ const Login = (props) => {
 
       <MessageDisplay ref={messageDisplayRef}/>
 
-      <div id="loginWithPassword">
+      <div>
         <Button type="submit" block>
           {isLoggingIn ? "Logging in..." : "Login"}
         </Button>
@@ -120,7 +120,7 @@ const Login = (props) => {
           <div>
             Sending password recovery...
           </div> :
-          <a href="#" onClick={onForgotPasswordClick} id="forgotPassword">Forgot my password</a>
+          <a href="#" onClick={onForgotPasswordClick}>Forgot my password</a>
         }
       </div>
 
