@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import React, { useRef } from 'react';
 
 import { Button, Form } from 'react-bootstrap';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 const PasswordFields = (props) => {
   const passwordRef = useRef(null);

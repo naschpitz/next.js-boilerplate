@@ -1,25 +1,23 @@
-import React, { useContext } from 'react'
-import Alert from 'react-s-alert'
-import { UniqueModalController } from '@naschpitz/unique-modal'
-import _ from 'lodash'
+import React, { useContext } from 'react';
+import Alert from 'react-s-alert';
+import { UniqueModalController } from '@naschpitz/unique-modal';
 
-import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
-import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 'react-icons/fa'
+import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 'react-icons/fa';
 
-import ChangePassword from '../user/changePassword/changePassword'
-import Context from '../context/context'
-import Fetcher from '../fetcher/fetcher'
-import Login from '../user/login/login'
-import Register from '../user/register/register'
-import ResetPassword from '../user/resetPassword/resetPassword'
+import ChangePassword from '../user/changePassword/changePassword';
+import Context from '../context/context';
+import Fetcher from '../fetcher/fetcher';
+import Login from '../user/login/login';
+import Register from '../user/register/register';
+import ResetPassword from '../user/resetPassword/resetPassword';
 
 const TopNavbar = () => {
   const context = useContext(Context);
 
   const [ user, updateUser, clearUser ] = context.useUser;
 
-  const session = null;
-  const passwordResetToken = _.get(session, 'passwordResetToken');
+  const passwordResetToken = null;
 
   checkPasswordResetToken();
 

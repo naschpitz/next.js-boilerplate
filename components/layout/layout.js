@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
 import Alert from 'react-s-alert';
 import { UniqueModal } from '@naschpitz/unique-modal';
-import { Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap';
 
-import TopNavbar from '../topNavbar/topNavbar'
+import TopNavbar from '../topNavbar/topNavbar';
 
 import style from './layout.module.css';
 

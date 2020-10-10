@@ -1,13 +1,13 @@
-import React, {useContext, useRef, useState} from 'react'
+import React, { useContext, useRef, useState } from 'react';
 
-import { Button, Form } from 'react-bootstrap'
-import { FaTimes } from 'react-icons/fa'
+import { Button, Form } from 'react-bootstrap';
+import { FaTimes } from 'react-icons/fa';
 
-import Context from '../../context/context'
-import MessageDisplay from '../../messageDisplay/messageDisplay'
-import PasswordFields from '../passwordFields/passwordsFields'
+import Context from '../../context/context';
+import MessageDisplay from '../../messageDisplay/messageDisplay';
+import PasswordFields from '../passwordFields/passwordsFields';
 
-import styles from './resetPassword.module.css'
+import styles from './resetPassword.module.css';
 
 let resetMsgId, passwordMsgId;
 

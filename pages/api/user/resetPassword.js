@@ -1,5 +1,5 @@
-import Session from '../../../lib/session'
-import UsersDAO from '../../../lib/users/dao'
+import Session from '../../../lib/session';
+import UsersDAO from '../../../lib/users/dao';
 
 export default async function resetPassword(req, res) {
   if (req.method === "POST") {

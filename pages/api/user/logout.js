@@ -1,4 +1,4 @@
-import Session from '../../../lib/session'
+import Session from '../../../lib/session';
 
 export default async function logout(req, res) {
   if (req.method === "POST") {

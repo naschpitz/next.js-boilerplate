@@ -1,7 +1,7 @@
-import hash from 'object-hash'
+import hash from 'object-hash';
 
-import Session from '../../../lib/session'
-import UsersDAO from '../../../lib/users/dao'
+import Session from '../../../lib/session';
+import UsersDAO from '../../../lib/users/dao';
 
 export default async function changePassword(req, res) {
   if (req.method === "POST") {

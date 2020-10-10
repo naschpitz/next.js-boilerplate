@@ -1,11 +1,11 @@
-import React, {useContext, useRef, useState} from 'react'
+import React, { useContext, useRef, useState } from 'react';
 
-import { Button, Form } from 'react-bootstrap'
-import { FaTimes } from 'react-icons/fa'
+import { Button, Form } from 'react-bootstrap';
+import { FaTimes } from 'react-icons/fa';
 
-import Context from '../../context/context'
-import Fetcher from '../../fetcher/fetcher'
-import MessageDisplay from '../../messageDisplay/messageDisplay'
+import Context from '../../context/context';
+import Fetcher from '../../fetcher/fetcher';
+import MessageDisplay from '../../messageDisplay/messageDisplay';
 
 let loginMsgId, forgotMsgId;
 

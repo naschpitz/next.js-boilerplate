@@ -1,10 +1,10 @@
-import React from 'react'
-import Head from 'next/head'
-import AbsoluteUrl from 'next-absolute-url'
+import React from 'react';
+import Head from 'next/head';
+import AbsoluteUrl from 'next-absolute-url';
 
-import Context from '../components/context/context'
-import Layout from '../components/layout/layout'
-import useUser from '../components/user/useUser/useUser'
+import Context from '../components/context/context';
+import Layout from '../components/layout/layout';
+import useUser from '../components/user/useUser/useUser';
 
 export default function Index({ context }) {
   context.useUser = useUser(context.origin);
