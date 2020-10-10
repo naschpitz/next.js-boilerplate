@@ -3,7 +3,7 @@ import AbsoluteUrl from 'next-absolute-url';
 import Mailer from '../../../lib/mailer';
 import Users from '../../../lib/users/class';
 
-export default async function forgotPassword(req, res) {
+export default async function recoverPassword(req, res) {
   if (req.method === "POST") {
     const { email } = req.body;
     const { origin } = AbsoluteUrl(req, 'localhost:3000');
@@ -25,8 +25,8 @@ export default async function forgotPassword(req, res) {
 
     const response = await Mailer.send("Password Reset", text, email);
 
-    if (response.responseCode)
-      return res.status(500).send({ message: "Mail service connection error." });
+    if (response)
+      return res.status(500).send({ message: "Mail service connection error" });
 
     return res.status(201).send("");
   }
