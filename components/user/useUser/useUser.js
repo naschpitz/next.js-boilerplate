@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import Fetcher from '../../../lib/fetcher'
+import Fetcher from '../../fetcher/fetcher'
 
 export default function useUser(origin)  {
   const [ user, setUser ] = useState(null);

@@ -1,11 +1,12 @@
 import Session from '../../../lib/session'
-import UsersDAO from '../../../lib/dao/users'
+import Users from '../../../lib/users/class'
+import UsersDAO from '../../../lib/users/dao'
 
 export default async function register(req, res) {
   if (req.method === "POST") {
     const { email, password } = req.body;
 
-    const exists = await UsersDAO.checkEmailExists(email);
+    const exists = await Users.checkEmailExists(email);
 
     if (exists)
       return res.status(409).send({ message: "There is already a registered user with this e-mail." });

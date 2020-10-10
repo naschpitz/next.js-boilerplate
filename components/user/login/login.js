@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, {useContext, useRef, useState} from 'react'
 
 import { Button, Form } from 'react-bootstrap'
 import { FaTimes } from 'react-icons/fa'
 
-import Fetcher from '../../../lib/fetcher'
+import Context from '../../context/context'
+import Fetcher from '../../fetcher/fetcher'
 import MessageDisplay from '../../messageDisplay/messageDisplay'
 
 let loginMsgId, forgotMsgId;
@@ -11,7 +12,9 @@ let loginMsgId, forgotMsgId;
 import styles from './login.module.css';
 
 const Login = (props) => {
-  const [ user, updateUser, clearUser ] = props.useUser;
+  const context = useContext(Context);
+
+  const [ user, updateUser, clearUser ] = context.useUser;
   const [ isLoggingIn, setIsLoggingIn ] = useState(false);
   const [ isSendingRecovery, setIsSendingRecovery ] = useState(false);
 
@@ -34,7 +37,7 @@ const Login = (props) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
-    }, props.origin);
+    }, context.origin);
 
     if (response.ok) {
       if (props.onDone)
@@ -51,7 +54,7 @@ const Login = (props) => {
     setIsLoggingIn(false);
   }
 
-  function onForgotPasswordClick() {
+  async function onForgotPasswordClick() {
     const email = emailRef.current.value;
     const messageDisplay = messageDisplayRef.current;
 
@@ -63,6 +66,26 @@ const Login = (props) => {
     }
 
     setIsSendingRecovery(true);
+
+    const response = await Fetcher.fetch('/api/user/forgotPassword', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    }, context.origin);
+
+    if (response.ok) {
+      const message = <span id="forgotMsg">An e-mail for password recovery has been sent to the registered address. Please check your <strong>SPAM</strong> box you if don't receive it in a few minutes.</span>
+      forgotMsgId = messageDisplay.show('success', message, forgotMsgId);
+    }
+
+    else {
+      console.log("Ahuahu");
+
+      const error = await response.json();
+      forgotMsgId = messageDisplay.show('error', "Error sending password recovery: " + error.message, forgotMsgId);
+    }
+
+    setIsSendingRecovery(false);
   }
 
   function onCloseClick() {

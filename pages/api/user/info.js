@@ -1,5 +1,5 @@
 import Session from '../../../lib/session'
-import UsersDAO from '../../../lib/dao/users'
+import UsersDAO from '../../../lib/users/dao'
 
 export default async function info(req, res) {
   if (req.method === "GET") {

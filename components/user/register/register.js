@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, {useContext, useRef, useState} from 'react'
 
 import { Button, Form } from 'react-bootstrap'
 import { FaTimes } from 'react-icons/fa'
 
-import Fetcher from '../../../lib/fetcher'
+import Context from '../../context/context'
+import Fetcher from '../../fetcher/fetcher'
 import MessageDisplay from '../../messageDisplay/messageDisplay'
 import PasswordFields from '../passwordFields/passwordsFields'
 
@@ -12,9 +13,11 @@ import styles from './register.module.css';
 let registerMsgId, existsMsgId, passwordMsgId;
 
 const Register = (props) => {
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [password, setPassword] = useState(false);
-  const [usernameExists, setUsernameExists] = useState(false);
+  const context = useContext(Context);
+
+  const [ isRegistering, setIsRegistering ] = useState(false);
+  const [ password, setPassword ] = useState(false);
+  const [ usernameExists, setUsernameExists ] = useState(false);
 
   const emailRef = useRef(null);
   const messageDisplayRef = useRef(null);
@@ -30,7 +33,7 @@ const Register = (props) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
-    }, props.origin);
+    }, context.origin);
 
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(registerMsgId);
@@ -52,7 +55,7 @@ const Register = (props) => {
     const response = await Fetcher.fetch('/api/user/checkEmailExists?email=' + email, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-    }, props.origin);
+    }, context.origin);
 
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(existsMsgId);

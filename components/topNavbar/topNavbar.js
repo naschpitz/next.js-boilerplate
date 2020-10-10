@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Alert from 'react-s-alert'
 import { UniqueModalController } from '@naschpitz/unique-modal'
 import _ from 'lodash'
@@ -7,14 +7,17 @@ import { Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 'react-icons/fa'
 
 import ChangePassword from '../user/changePassword/changePassword'
+import Context from '../context/context'
 import Login from '../user/login/login'
 import Register from '../user/register/register'
 import ResetPassword from '../user/resetPassword/resetPassword'
 
-const TopNavbar = (props) => {
-  const [ user, updateUser, clearUser ] = props.useUser;
+const TopNavbar = () => {
+  const context = useContext(Context);
 
-  const session = props.session;
+  const [ user, updateUser, clearUser ] = context.useUser;
+
+  const session = null;
   const passwordResetToken = _.get(session, 'passwordResetToken');
 
   checkPasswordResetToken();
@@ -104,17 +107,17 @@ const TopNavbar = (props) => {
 
   function onLoginClick()
   {
-    UniqueModalController.open(<Login onDone={onModalClose} {...props} />);
+    UniqueModalController.open(<Login onDone={onModalClose} />);
   }
 
   function onRegisterClick()
   {
-    UniqueModalController.open(<Register onDone={onModalClose} {...props} />);
+    UniqueModalController.open(<Register onDone={onModalClose} />);
   }
 
   function onChangePasswordClick()
   {
-    UniqueModalController.open(<ChangePassword onDone={onModalClose} {...props} />);
+    UniqueModalController.open(<ChangePassword onDone={onModalClose} />);
   }
 
   function onModalClose()
@@ -142,7 +145,7 @@ const TopNavbar = (props) => {
 
   function onResetPasswordClick()
   {
-    UniqueModalController.open(<ResetPassword onDone={onModalClose} {...props} />);
+    UniqueModalController.open(<ResetPassword onDone={onModalClose} />);
   }
 
   return (

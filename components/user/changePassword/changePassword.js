@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { Button, Form } from 'react-bootstrap'
 
-import Fetcher from '../../../lib/fetcher'
+import Context from '../../context/context'
+import Fetcher from '../../fetcher/fetcher'
 import MessageDisplay from '../../messageDisplay/messageDisplay'
 import PasswordFields from '../passwordFields/passwordsFields'
 
@@ -11,6 +12,8 @@ import styles from './changePassword.module.css'
 let changeMsgId, passwordMsgId;
 
 const ChangePassword = (props) => {
+  const context = useContext(Context);
+
   const [ isChangingPassword, setIsChangingPassword ] = useState(false);
   const [ password, setPassword ] = useState("");
 
@@ -33,7 +36,7 @@ const ChangePassword = (props) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ oldPassword, newPassword })
-    }, props.origin);
+    }, context.origin);
 
     if (response.ok)
       changeMsgId = messageDisplay.show('success', "Password changed successfully.", changeMsgId);
