@@ -8,6 +8,7 @@ import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 
 
 import ChangePassword from '../user/changePassword/changePassword'
 import Context from '../context/context'
+import Fetcher from '../fetcher/fetcher'
 import Login from '../user/login/login'
 import Register from '../user/register/register'
 import ResetPassword from '../user/resetPassword/resetPassword'
@@ -132,15 +133,18 @@ const TopNavbar = () => {
 
   async function onLogoutClick()
   {
-    const response = await fetch('/api/user/logout', {
-      method: 'GET'
-    });
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    };
 
-    if (!response.ok)
-      Alert.error("Oops, an error occurred during logout, please try again.");
+    const response = await Fetcher.fetch('/api/user/logout', options, context.origin);
+
+    if (response.ok)
+      clearUser();
 
     else
-      clearUser();
+      Alert.error("Oops, an error occurred during logout, please try again.");
   }
 
   function onResetPasswordClick()

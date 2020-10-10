@@ -27,10 +27,10 @@ const ResetPassword = (props) => {
   function onFormSubmit(event) {
     event.preventDefault();
 
-    setIsResettingPassword(true);
-
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(resetMsgId);
+
+    setIsResettingPassword(true);
 
     function callback(error) {
       if (error)

@@ -25,18 +25,20 @@ const Register = (props) => {
   async function onFormSubmit(event) {
     event.preventDefault();
 
-    setIsRegistering(true);
-
     const email = emailRef.current.value;
-
-    const response = await Fetcher.fetch('/api/user/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    }, context.origin);
 
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(registerMsgId);
+
+    setIsRegistering(true);
+
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    };
+
+    const response = await Fetcher.fetch('/api/user/register', options, context.origin);
 
     if (response.ok)
       registerMsgId = messageDisplay.show('success', "User successfully registered. A confirmation e-mail has been sent to you.", registerMsgId);
@@ -65,7 +67,7 @@ const Register = (props) => {
 
       if (result.exists) {
         setUsernameExists(true);
-        registerMsgId = messageDisplay.show('error', "There is already a registered user with this e-mail.", registerMsgId);
+        existsMsgId = messageDisplay.show('error', "There is already a registered user with this e-mail.", existsMsgId);
       }
 
       else

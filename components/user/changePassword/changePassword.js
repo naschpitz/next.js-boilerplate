@@ -32,11 +32,13 @@ const ChangePassword = (props) => {
 
     setIsChangingPassword(true);
 
-    const response = await Fetcher.fetch('/api/user/changePassword', {
+    const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ oldPassword, newPassword })
-    }, context.origin);
+    };
+
+    const response = await Fetcher.fetch('/api/user/changePassword', options, context.origin);
 
     if (response.ok)
       changeMsgId = messageDisplay.show('success', "Password changed successfully.", changeMsgId);

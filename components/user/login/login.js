@@ -33,11 +33,13 @@ const Login = (props) => {
 
     setIsLoggingIn(true);
 
-    const response = await Fetcher.fetch('/api/user/login', {
+    const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
-    }, context.origin);
+    };
+
+    const response = await Fetcher.fetch('/api/user/login', options, context.origin);
 
     if (response.ok) {
       if (props.onDone)
@@ -67,11 +69,13 @@ const Login = (props) => {
 
     setIsSendingRecovery(true);
 
-    const response = await Fetcher.fetch('/api/user/forgotPassword', {
+    const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
-    }, context.origin);
+    };
+
+    const response = await Fetcher.fetch('/api/user/forgotPassword', options, context.origin);
 
     if (response.ok) {
       const message = <span id="forgotMsg">An e-mail for password recovery has been sent to the registered address. Please check your <strong>SPAM</strong> box you if don't receive it in a few minutes.</span>
@@ -79,8 +83,6 @@ const Login = (props) => {
     }
 
     else {
-      console.log("Ahuahu");
-
       const error = await response.json();
       forgotMsgId = messageDisplay.show('error', "Error sending password recovery: " + error.message, forgotMsgId);
     }
