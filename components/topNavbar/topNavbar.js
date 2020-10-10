@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import Alert from 'react-s-alert';
 import { UniqueModalController } from '@naschpitz/unique-modal';
+import _ from 'lodash';
 
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 'react-icons/fa';
@@ -17,15 +18,10 @@ const TopNavbar = () => {
 
   const [ user, updateUser, clearUser ] = context.useUser;
 
-  const passwordResetToken = null;
+  const passwordRecoveryToken = _.get(context, 'passwordRecovery.token');
 
-  checkPasswordResetToken();
-
-  function checkPasswordResetToken() {
-    if (!!passwordResetToken) {
-      UniqueModalController.open(<ResetPassword onDone={onModalClose}/>);
-    }
-  }
+  if (passwordRecoveryToken)
+    UniqueModalController.open(<ResetPassword onDone={onModalClose}/>);
 
   function getLeftItems()
   {
@@ -50,7 +46,7 @@ const TopNavbar = () => {
               </Nav.Link>
             </Nav.Item>
 
-            {!!passwordResetToken ?
+            {passwordRecoveryToken ?
               <Nav.Item>
                 <Nav.Link onClick={onResetPasswordClick}>
                   <FaSyncAlt className="align-middle"/> Reset Password

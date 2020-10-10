@@ -1,20 +1,41 @@
-import Session from '../../../lib/session';
+import Cookies from 'cookies';
+
 import UsersDAO from '../../../lib/users/dao';
 
 export default async function resetPassword(req, res) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     const { token } = req.query;
 
-    const user = UsersDAO.getByPasswordResetToken(token);
+    const cookies = new Cookies(req, res);
+    cookies.set('passwordRecovery', JSON.stringify({ token }));
 
-    if (!user) {
+    res.writeHead(302, { Location: '/' });
 
-    }
+    return res.end();
+  }
+
+  if (req.method === "POST") {
+    const { password } = req.body;
+
+    const cookies = new Cookies(req, res);
+    const passwordRecovery = cookies.get('passwordRecovery');
+
+    cookies.set('passwordRecovery');
+
+    let token;
+
+    if (passwordRecovery)
+      token = JSON.parse(passwordRecovery).token;
+
+    const user = await UsersDAO.getByPasswordRecoveryToken(token);
+
+    if (!user)
+      return res.status(404).send({ message: "Invalid token." });
 
     const userId = user._id;
 
-    const session = new Session(req, res);
-    await session.genToken(userId);
+    await UsersDAO.unsetPasswordRecoveryToken(userId);
+    await UsersDAO.setPassword(userId, password);
 
     return res.status(201).send("");
   }

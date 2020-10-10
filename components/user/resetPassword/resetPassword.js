@@ -4,6 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import { FaTimes } from 'react-icons/fa';
 
 import Context from '../../context/context';
+import Fetcher from '../../fetcher/fetcher';
 import MessageDisplay from '../../messageDisplay/messageDisplay';
 import PasswordFields from '../passwordFields/passwordsFields';
 
@@ -24,7 +25,7 @@ const ResetPassword = (props) => {
     return password;
   }
 
-  function onFormSubmit(event) {
+  async function onFormSubmit(event) {
     event.preventDefault();
 
     const messageDisplay = messageDisplayRef.current;
@@ -32,15 +33,23 @@ const ResetPassword = (props) => {
 
     setIsResettingPassword(true);
 
-    function callback(error) {
-      if (error)
-        resetMsgId = messageDisplay.show('error', "Error resetting password, the link has expired.", resetMsgId);
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    };
 
-      else
-        resetMsgId = messageDisplay.show('success', "Password changed successfully.", resetMsgId);
+    const response = await Fetcher.fetch('/api/user/resetPassword', options, context.origin);
 
-      setIsResettingPassword(false);
+    if (response.ok)
+      resetMsgId = messageDisplay.show('success', "Password changed successfully.", resetMsgId);
+
+    else {
+      const error = await response.json();
+      resetMsgId = messageDisplay.show('error', "Error resetting password: " + error.message, resetMsgId);
     }
+
+    setIsResettingPassword(false);
   }
 
   function onPasswordChange(password) {
@@ -67,7 +76,7 @@ const ResetPassword = (props) => {
 
       <MessageDisplay ref={messageDisplayRef}/>
 
-      <Button type="submit" disabled={!canReset()}>
+      <Button type="submit" block disabled={!canReset()}>
         {isResettingPassword ?
           <div>Resetting password...</div> :
           <div>Reset Password</div>

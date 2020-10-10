@@ -8,7 +8,7 @@ export default async function info(req, res) {
     const isValid = await session.isValid();
 
     if (!isValid)
-      return res.status(401).send({ message: "Invalid session token." });
+      return res.status(403).send({ message: "Invalid session token." });
 
     const sessionObj = session.getObject();
 

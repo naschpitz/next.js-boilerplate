@@ -75,7 +75,7 @@ const Login = (props) => {
       body: JSON.stringify({ email })
     };
 
-    const response = await Fetcher.fetch('/api/user/forgotPassword', options, context.origin);
+    const response = await Fetcher.fetch('/api/user/recoverPassword', options, context.origin);
 
     if (response.ok) {
       const message = <span>An e-mail for password recovery has been sent to the registered address. Please check your <strong>SPAM</strong> box you if don't receive it in a few minutes.</span>

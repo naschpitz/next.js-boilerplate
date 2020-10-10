@@ -12,7 +12,7 @@ export default async function changePassword(req, res) {
     const isValid = await session.isValid();
 
     if (!isValid)
-      return res.status(401).send({ message: "Invalid session token." });
+      return res.status(403).send({ message: "Invalid session token." });
 
     const sessionObj = session.getObject();
     const userId = sessionObj.userId;
@@ -20,9 +20,9 @@ export default async function changePassword(req, res) {
     const password = await UsersDAO.getPassword(userId);
 
     if (hash(oldPassword) !== password)
-      return res.status(401).send({ message: "Wrong current password." });
+      return res.status(403).send({ message: "Wrong current password." });
 
-    await UsersDAO.changePassword(userId, newPassword);
+    await UsersDAO.setPassword(userId, newPassword);
     await session.genSecret(userId);
     await session.genToken(userId);
 

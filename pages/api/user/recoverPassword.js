@@ -13,13 +13,13 @@ export default async function recoverPassword(req, res) {
     if (!exists)
       return res.status(404).send({ message: "E-mail not registered in the database." });
 
-    const token = await Users.genResetPasswordToken(email);
+    const token = await Users.genPasswordRecoveryToken(email);
 
     let text = "Hello!";
     text += "\r\n\r\n";
     text += "To confirm you wish to reset your password click the link bellow.";
     text += "\r\n\r\n";
-    text += origin + "/api/resetPassword?token=" + token;
+    text += origin + "/api/user/resetPassword?token=" + token;
     text += "\r\n\r\n";
     text += "Thanks!";
 
