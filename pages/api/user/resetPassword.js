@@ -20,8 +20,6 @@ export default async function resetPassword(req, res) {
     const cookies = new Cookies(req, res);
     const passwordRecovery = cookies.get('passwordRecovery');
 
-    cookies.set('passwordRecovery');
-
     let token;
 
     if (passwordRecovery)
@@ -35,8 +33,16 @@ export default async function resetPassword(req, res) {
     const userId = user._id;
 
     await UsersDAO.unsetPasswordRecoveryToken(userId);
-    await UsersDAO.setPassword(userId, password);
 
+    try {
+      await UsersDAO.setPassword(userId, password);
+    }
+
+    catch (error) {
+      return res.status(400).send({ message: error.message });
+    }
+
+    cookies.set('passwordRecovery');
     return res.status(201).send("");
   }
 

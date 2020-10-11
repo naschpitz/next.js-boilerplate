@@ -22,7 +22,14 @@ export default async function changePassword(req, res) {
     if (hash(oldPassword) !== password)
       return res.status(403).send({ message: "Wrong current password." });
 
-    await UsersDAO.setPassword(userId, newPassword);
+    try {
+      await UsersDAO.setPassword(userId, newPassword);
+    }
+
+    catch (error) {
+      return res.status(400).send({ message: error.message });
+    }
+
     await session.genSecret(userId);
     await session.genToken(userId);
 
