@@ -1,6 +1,6 @@
 import Session from '../../../lib/session';
-import Users from '../../../lib/users/class';
-import UsersDAO from '../../../lib/users/dao';
+import Users from '../../../lib/users/server/class';
+import UsersDAO from '../../../lib/users/server/dao';
 
 export default async function register(req, res) {
   if (req.method === "POST") {

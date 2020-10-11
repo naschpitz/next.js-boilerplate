@@ -7,6 +7,7 @@ import Context from '../../context/context';
 import Fetcher from '../../fetcher/fetcher';
 import MessageDisplay from '../../messageDisplay/messageDisplay';
 import PasswordFields from '../passwordFields/passwordsFields';
+import Users from '../../../lib/users/client/class';
 
 import styles from './resetPassword.module.css';
 
@@ -54,15 +55,25 @@ const ResetPassword = (props) => {
 
   function onPasswordChange(password) {
     const messageDisplay = messageDisplayRef.current;
-    messageDisplay.hide(passwordMsgId);
 
     if (!password) {
       setPassword(null);
       passwordMsgId = messageDisplay.show('error', "The typed passwords do not match.", passwordMsgId);
     }
 
-    else
-      setPassword(password);
+    else {
+      const isPasswordValid = Users.validatePassword(password);
+
+      if (!isPasswordValid) {
+        setPassword(null);
+        passwordMsgId = messageDisplay.show('error', "The typed password does not meet the requirements.", passwordMsgId);
+      }
+
+      else {
+        setPassword(password);
+        messageDisplay.hide(passwordMsgId);
+      }
+    }
   }
 
   function onCloseClick() {

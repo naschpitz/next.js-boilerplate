@@ -7,6 +7,7 @@ import Context from '../../context/context';
 import Fetcher from '../../fetcher/fetcher';
 import MessageDisplay from '../../messageDisplay/messageDisplay';
 import PasswordFields from '../passwordFields/passwordsFields';
+import Users from '../../../lib/users/client/class';
 
 import styles from './register.module.css';
 
@@ -54,10 +55,12 @@ const Register = (props) => {
   async function onEmailChange() {
     const email = emailRef.current.value;
 
-    const response = await Fetcher.fetch('/api/user/checkEmailExists?email=' + email, {
+    const options = {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-    }, context.origin);
+    };
+
+    const response = await Fetcher.fetch('/api/user/checkEmailExists?email=' + email, options, context.origin);
 
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(existsMsgId);
@@ -84,8 +87,17 @@ const Register = (props) => {
     }
 
     else {
-      setPassword(password);
-      messageDisplay.hide(passwordMsgId);
+      const isPasswordValid = Users.validatePassword(password);
+
+      if (!isPasswordValid) {
+        setPassword(null);
+        passwordMsgId = messageDisplay.show('error', "The typed password does not meet the requirements.", passwordMsgId);
+      }
+
+      else {
+        setPassword(password);
+        messageDisplay.hide(passwordMsgId);
+      }
     }
   }
 

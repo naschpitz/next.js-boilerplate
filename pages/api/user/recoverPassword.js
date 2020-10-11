@@ -1,7 +1,7 @@
 import AbsoluteUrl from 'next-absolute-url';
 
 import Mailer from '../../../lib/mailer';
-import Users from '../../../lib/users/class';
+import Users from '../../../lib/users/server/class';
 
 export default async function recoverPassword(req, res) {
   if (req.method === "POST") {

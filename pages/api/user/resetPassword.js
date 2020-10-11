@@ -1,6 +1,6 @@
 import Cookies from 'cookies';
 
-import UsersDAO from '../../../lib/users/dao';
+import UsersDAO from '../../../lib/users/server/dao';
 
 export default async function resetPassword(req, res) {
   if (req.method === "GET") {

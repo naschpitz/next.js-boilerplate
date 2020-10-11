@@ -1,4 +1,4 @@
-import Users from '../../../lib/users/class';
+import Users from '../../../lib/users/server/class';
 
 export default async function checkEmailExists(req, res) {
   if (req.method === "GET") {
