@@ -42,7 +42,7 @@ const ResetPassword = (props) => {
     const response = await Fetcher.fetch('/api/user/resetPassword', options, context.origin);
 
     if (response.ok)
-      resetMsgId = messageDisplay.show('success', "Password changed successfully.", resetMsgId);
+      resetMsgId = messageDisplay.show('success', "Password successfully changed.", resetMsgId);
 
     else {
       const error = await response.json();

@@ -11,13 +11,7 @@ export default async function register(req, res) {
     if (exists)
       return res.status(409).send({ message: "There is already a registered user with this e-mail." });
 
-    const user = {
-      email: {
-        address: email
-      },
-      password: password
-    };
-
+    const user = { email: { address: email }, password: password };
     const response = await UsersDAO.insert(user);
 
     if (response.result.ok) {
