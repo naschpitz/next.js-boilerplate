@@ -1,4 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import _ from 'lodash';
 
 import { Button, Form } from 'react-bootstrap';
 import { FaTimes } from 'react-icons/fa';
@@ -15,15 +17,17 @@ let resetMsgId, passwordMsgId;
 
 const ResetPassword = (props) => {
   const context = useContext(Context);
+  const token = _.get(context, 'resetPassword.token');
 
   const [ isResettingPassword, setIsResettingPassword ] = useState(false);
   const [ password, setPassword ] = useState("");
+  const router = useRouter();
 
   const messageDisplayRef = useRef(null);
   const passwordFieldsRef = useRef(null);
 
   function canReset() {
-    return password;
+    return password && token;
   }
 
   async function onFormSubmit(event) {
@@ -37,7 +41,7 @@ const ResetPassword = (props) => {
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password })
+      body: JSON.stringify({ password, token })
     };
 
     const response = await Fetcher.fetch('/api/user/resetPassword', options, context.origin);
@@ -49,6 +53,8 @@ const ResetPassword = (props) => {
       const error = await response.json();
       resetMsgId = messageDisplay.show('error', "Error resetting password: " + error.message, resetMsgId);
     }
+
+    router.replace('/');
 
     setIsResettingPassword(false);
   }

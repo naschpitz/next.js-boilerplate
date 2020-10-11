@@ -1,29 +1,22 @@
-import Cookies from 'cookies';
-
 import UsersDAO from '../../../lib/users/server/dao';
 
 export default async function resetPassword(req, res) {
   if (req.method === "GET") {
     const { token } = req.query;
 
-    const cookies = new Cookies(req, res);
-    cookies.set('passwordRecovery', JSON.stringify({ token }));
+    const user = await UsersDAO.getByPasswordRecoveryToken(token);
 
-    res.writeHead(302, { Location: '/' });
+    if (user)
+      res.writeHead(302, { Location: '/?resetPassword={"status":"open","token":"' + token + '"}' });
+
+    if (!user)
+      res.writeHead(302, { Location: '/?resetPassword={"status":"invalidToken"}' });
 
     return res.end();
   }
 
   if (req.method === "POST") {
-    const { password } = req.body;
-
-    const cookies = new Cookies(req, res);
-    const passwordRecovery = cookies.get('passwordRecovery');
-
-    let token;
-
-    if (passwordRecovery)
-      token = JSON.parse(passwordRecovery).token;
+    const { password, token } = req.body;
 
     const user = await UsersDAO.getByPasswordRecoveryToken(token);
 
@@ -42,7 +35,6 @@ export default async function resetPassword(req, res) {
       return res.status(400).send({ message: error.message });
     }
 
-    cookies.set('passwordRecovery');
     return res.status(201).send("");
   }
 

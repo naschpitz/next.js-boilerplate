@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Alert from 'react-s-alert';
 import { UniqueModalController } from '@naschpitz/unique-modal';
 import _ from 'lodash';
@@ -17,11 +18,28 @@ const TopNavbar = () => {
   const context = useContext(Context);
 
   const [ user, updateUser, clearUser ] = context.useUser;
+  const router = useRouter();
 
-  const passwordRecoveryToken = _.get(context, 'passwordRecovery.token');
+  const emailVerification = _.get(context, 'emailVerification');
+  const resetPassword = _.get(context, 'resetPassword', {});
 
-  if (passwordRecoveryToken)
-    UniqueModalController.open(<ResetPassword onDone={onModalClose}/>);
+  useEffect(() => {
+    if (emailVerification === 'success') {
+      Alert.success("E-mail successfully verified.");
+      router.replace('/');
+    }
+
+    if (emailVerification === 'invalidToken') {
+      Alert.error("Invalid e-mail verification token.");
+      router.replace('/');
+    }
+
+    if (resetPassword.status === 'open')
+      UniqueModalController.open(<ResetPassword onDone={onModalClose} />);
+
+    if (resetPassword.status === 'invalidToken')
+      Alert.error("Invalid password recovery token.");
+  }, []);
 
   function getLeftItems()
   {
@@ -46,7 +64,7 @@ const TopNavbar = () => {
               </Nav.Link>
             </Nav.Item>
 
-            {passwordRecoveryToken ?
+            {resetPassword.status === 'open' ?
               <Nav.Item>
                 <Nav.Link onClick={onResetPasswordClick}>
                   <FaSyncAlt className="align-middle"/> Reset Password
@@ -79,8 +97,8 @@ const TopNavbar = () => {
           </NavDropdown.Item>
 
           {!verified ?
-            <NavDropdown.Item onClick={onConfirmEmailClick}>
-              <FaSyncAlt className="align-middle"/>Re-send Confirmation
+            <NavDropdown.Item onClick={onVerifyEmailClick}>
+              <FaSyncAlt className="align-middle"/> Re-send Verification
             </NavDropdown.Item> : null
           }
 
@@ -120,9 +138,24 @@ const TopNavbar = () => {
     UniqueModalController.close();
   }
 
-  function onConfirmEmailClick()
+  async function onVerifyEmailClick()
   {
-    Alert.success("A confirmation e-mail has been sent to you.");
+    Alert.info("Sending verification e-mail...");
+
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    };
+
+    const response = await Fetcher.fetch('/api/user/verifyEmail', options, context.origin);
+
+    if (response.ok)
+      Alert.success("A verification e-mail has been sent to you.");
+
+    else {
+      const error = await response.json();
+      Alert.error("Error sending verification e-mail: " + error.message);
+    }
   }
 
   async function onLogoutClick()

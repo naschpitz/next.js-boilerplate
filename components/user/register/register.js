@@ -42,7 +42,7 @@ const Register = (props) => {
     const response = await Fetcher.fetch('/api/user/register', options, context.origin);
 
     if (response.ok)
-      registerMsgId = messageDisplay.show('success', "User successfully registered. A confirmation e-mail has been sent to you.", registerMsgId);
+      registerMsgId = messageDisplay.show('success', "User successfully registered. A verification e-mail has been sent to you.", registerMsgId);
 
     else {
       const error = await response.json();

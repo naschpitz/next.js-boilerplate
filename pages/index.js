@@ -1,6 +1,5 @@
 import React from 'react';
 import AbsoluteUrl from 'next-absolute-url';
-import Cookies from 'cookies';
 import Head from 'next/head';
 
 import Context from '../components/context/context';
@@ -30,16 +29,16 @@ export default function Index({ context }) {
   )
 }
 
-export async function getServerSideProps({ req, res }) {
+export async function getServerSideProps({ req, res, query }) {
   const { origin } = AbsoluteUrl(req, 'localhost:3000');
 
   const context = { origin };
 
-  const cookies = new Cookies(req, res);
-  const passwordRecovery = cookies.get('passwordRecovery');
+  if (query && query.emailVerification)
+    context.emailVerification = query.emailVerification;
 
-  if (passwordRecovery)
-    context.passwordRecovery = JSON.parse(passwordRecovery);
+  if (query && query.resetPassword)
+    context.resetPassword = JSON.parse(query.resetPassword);
 
   return { props: { context } };
 }
