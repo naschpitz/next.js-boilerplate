@@ -182,7 +182,7 @@ const TopNavbar = () => {
   return (
     <Navbar variant="light" bg="light" expand="lg">
       <Navbar.Brand href="/">
-        <img src="/images/banner.png" height="50" alt="Boilerplate.com" />
+        <img src="/images/next.png" height="50" alt="Boilerplate.com" />
       </Navbar.Brand>
 
       <Navbar.Toggle aria-controls="navbar" />
