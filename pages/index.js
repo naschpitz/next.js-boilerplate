@@ -16,15 +16,13 @@ export default function Index({ context }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <Context.Provider value={context}>
-          <Layout>
-            <div>
-              Main Content
-            </div>
-          </Layout>
-        </Context.Provider>
-      </main>
+      <Context.Provider value={context}>
+        <Layout>
+          <div>
+            Main Content
+          </div>
+        </Layout>
+      </Context.Provider>
     </div>
   )
 }

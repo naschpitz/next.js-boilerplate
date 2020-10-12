@@ -1,3 +1,7 @@
 .layout {
     padding: 0px;
 }
+
+.box {
+    min-height: 100vh;
+}
