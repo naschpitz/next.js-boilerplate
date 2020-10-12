@@ -26,7 +26,7 @@ export default async function recoverPassword(req, res) {
     const response = await Mailer.send("Password Reset", text, email);
 
     if (response)
-      return res.status(500).send({ message: "Mail service connection error." });
+      return res.status(500).send({ message: "Mail server connection error." });
 
     return res.status(201).send("");
   }

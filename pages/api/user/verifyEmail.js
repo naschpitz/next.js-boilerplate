@@ -37,7 +37,7 @@ export default async function verifyEmail(req, res) {
     const response = await Mailer.send("E-mail Verification", text, email);
 
     if (response)
-      return res.status(500).send({ message: "Mail service connection error." });
+      return res.status(500).send({ message: "Mail server connection error." });
 
     return res.status(201).send("");
   }
