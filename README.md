@@ -2,17 +2,43 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+1. Install the dependencies:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+    ```bash
+    npm i
+    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Setup your .env.[local | development | production] variables:
+
+    ```
+    MONGO_URL=mongodb://username:password@host/database_name
+    MONGO_DB_NAME=database_name
+
+    MAIL_URL=smtps://username:password@smtp_server:port_number
+    MAIL_FROM=Next.js Boilerplate <contact@boilerplate.com>
+    ```
+
+3. Run the development server:
+
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    ```
+
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+
+## Features
+
+Credentials (e-mail / password) based user login system comprising:
+
+- Registration
+- Login / Logout
+- Password change
+- Password recovery
+- E-mail address ownership verification
 
 ## Learn More
 
