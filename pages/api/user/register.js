@@ -13,7 +13,7 @@ export default async function register(req, res) {
     const exists = await Users.checkEmailExists(email);
 
     if (exists)
-      return res.status(409).send({ message: "There is already a registered user with this e-mail." });
+      return res.status(409).json({ message: "There is already a registered user with this e-mail." });
 
     const user = { email: { address: email }, password: password };
 
@@ -24,11 +24,11 @@ export default async function register(req, res) {
     }
 
     catch (error) {
-      return res.status(400).send({ message: error.message });
+      return res.status(400).json({ message: error.message });
     }
 
     if (!response.result.ok)
-      return res.status(500).send({ message: "Error inserting user in the database." });
+      return res.status(500).json({ message: "Error inserting user in the database." });
 
     const userId  = response.insertedIds[0];
 
@@ -49,10 +49,10 @@ export default async function register(req, res) {
     response = await Mailer.send("Welcome to Next.js Boilerplate", text, email);
 
     if (response)
-      return res.status(500).send({ message: "Mail server connection error." });
+      return res.status(500).json({ message: "Mail server connection error." });
 
-    return res.status(201).send("");
+    return res.status(201).json({});
   }
 
-  return res.status(405).send({ message: "Method not allowed." });
+  return res.status(405).json({ message: "Method not allowed." });
 }

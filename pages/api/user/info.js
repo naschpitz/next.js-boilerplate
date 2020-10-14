@@ -8,7 +8,7 @@ export default async function info(req, res) {
     const isValid = await session.isValid();
 
     if (!isValid)
-      return res.status(403).send({ message: "Invalid session token." });
+      return res.status(403).json({ message: "Invalid session token." });
 
     const sessionObj = session.getObject();
 
@@ -20,8 +20,8 @@ export default async function info(req, res) {
 
     await session.genToken(userId);
 
-    return res.status(200).send({ user });
+    return res.status(200).json({ user });
   }
 
-  return res.status(405).send({ message: "Method not allowed." });
+  return res.status(405).json({ message: "Method not allowed." });
 }

@@ -6,6 +6,6 @@ export default async function checkEmailExists(req, res) {
 
     const exists = await Users.checkEmailExists(email);
 
-    return res.status(200).send({ exists });
+    return res.status(200).json({ exists });
   }
 }

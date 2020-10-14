@@ -11,7 +11,7 @@ export default async function recoverPassword(req, res) {
     const exists = await Users.checkEmailExists(email);
 
     if (!exists)
-      return res.status(404).send({ message: "E-mail not registered in the database." });
+      return res.status(404).json({ message: "E-mail not registered in the database." });
 
     const token = await Users.genPasswordRecoveryToken(email);
 
@@ -26,10 +26,10 @@ export default async function recoverPassword(req, res) {
     const response = await Mailer.send("Password Reset", text, email);
 
     if (response)
-      return res.status(500).send({ message: "Mail server connection error." });
+      return res.status(500).json({ message: "Mail server connection error." });
 
-    return res.status(201).send("");
+    return res.status(201).json({});
   }
 
-  return res.status(405).send({ message: "Method not allowed." });
+  return res.status(405).json({ message: "Method not allowed." });
 }

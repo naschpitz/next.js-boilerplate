@@ -6,8 +6,8 @@ export default async function logout(req, res) {
 
     session.invalidate();
 
-    return res.status(201).send("");
+    return res.status(201).json({});
   }
 
-  return res.status(404).send("");
+  return res.status(404).json({});
 }

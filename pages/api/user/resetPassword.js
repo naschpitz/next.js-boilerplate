@@ -7,12 +7,10 @@ export default async function resetPassword(req, res) {
     const user = await UsersDAO.getByPasswordRecoveryToken(token);
 
     if (user)
-      res.writeHead(302, { Location: '/?resetPassword={"status":"open","token":"' + token + '"}' });
+      return res.redirect(302, '/?resetPassword={"status":"open","token":"' + token + '"}');
 
-    if (!user)
-      res.writeHead(302, { Location: '/?resetPassword={"status":"invalidToken"}' });
-
-    return res.end();
+    else
+      return res.redirect(302, '/?resetPassword={"status":"invalidToken"}');
   }
 
   if (req.method === "POST") {
@@ -21,7 +19,7 @@ export default async function resetPassword(req, res) {
     const user = await UsersDAO.getByPasswordRecoveryToken(token);
 
     if (!user)
-      return res.status(404).send({ message: "Invalid token." });
+      return res.status(404).json({ message: "Invalid token." });
 
     const userId = user._id;
 
@@ -32,11 +30,11 @@ export default async function resetPassword(req, res) {
     }
 
     catch (error) {
-      return res.status(400).send({ message: error.message });
+      return res.status(400).json({ message: error.message });
     }
 
-    return res.status(201).send("");
+    return res.status(201).json({});
   }
 
-  return res.status(405).send({ message: "Method not allowed." });
+  return res.status(405).json({ message: "Method not allowed." });
 }
