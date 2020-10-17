@@ -1,7 +1,8 @@
 import AbsoluteUrl from 'next-absolute-url';
 
+import handleError from '../../../lib/handleError';
 import Mailer from '../../../lib/mailer';
-import Users from '../../../lib/users/server/class';
+import Users from '../../../lib/users/dao';
 
 export default async function recoverPassword(req, res) {
   if (req.method === "POST") {
@@ -13,7 +14,17 @@ export default async function recoverPassword(req, res) {
     if (!exists)
       return res.status(404).json({ message: "E-mail not registered in the database." });
 
-    const token = await Users.genPasswordRecoveryToken(email);
+    const user = await Users.findOne().byEmail(email);
+
+    let token;
+
+    try {
+      token = await user.genPasswordRecoveryToken(email);
+    }
+
+    catch (error) {
+      return handleError(req, res, error);
+    }
 
     let text = "Hello!";
     text += "\r\n\r\n";

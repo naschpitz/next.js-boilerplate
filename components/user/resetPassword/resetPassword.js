@@ -9,7 +9,7 @@ import Context from '../../context/context';
 import Fetcher from '../../fetcher/fetcher';
 import MessageDisplay from '../../messageDisplay/messageDisplay';
 import PasswordFields from '../passwordFields/passwordsFields';
-import Users from '../../../lib/users/client/class';
+import Users from '../../../lib/users/class';
 
 import styles from './resetPassword.module.css';
 

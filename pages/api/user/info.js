@@ -1,24 +1,20 @@
-import Session from '../../../lib/session';
-import UsersDAO from '../../../lib/users/server/dao';
+import Sessions from '../../../lib/sessions/dao';
+import Users from '../../../lib/users/dao';
 
 export default async function info(req, res) {
   if (req.method === "GET") {
-    const session = new Session(req, res);
-
-    const isValid = await session.isValid();
+    const isValid = await Sessions.isValid(req, res);
 
     if (!isValid)
       return res.status(403).json({ message: "Invalid session token." });
 
-    const sessionObj = session.getObject();
+    const sessionCookieObj = Sessions.getCookieObject(req, res);
 
-    const userId = sessionObj.userId;
-    const user = await UsersDAO.getById(userId);
+    const userId = sessionCookieObj.userId;
+    const user = await Users.findById(userId).select('email.address email.verified');
 
-    delete user.password;
-    delete user.session;
-
-    await session.genToken(userId);
+    const session = await Sessions.findOne().byOwner(userId);
+    await session.genToken(req, res);
 
     return res.status(200).json({ user });
   }

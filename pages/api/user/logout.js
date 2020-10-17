@@ -1,10 +1,8 @@
-import Session from '../../../lib/session';
+import Sessions from '../../../lib/sessions/dao';
 
 export default async function logout(req, res) {
   if (req.method === "POST") {
-    const session = new Session(req, res);
-
-    session.invalidate();
+    Sessions.invalidate(req, res);
 
     return res.status(201).json({});
   }

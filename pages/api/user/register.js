@@ -1,52 +1,35 @@
 import AbsoluteUrl from 'next-absolute-url';
 
+import handleError from '../../../lib/handleError';
 import Mailer from '../../../lib/mailer';
-import Session from '../../../lib/session';
-import Users from '../../../lib/users/server/class';
-import UsersDAO from '../../../lib/users/server/dao';
+import Users from '../../../lib/users/dao';
 
 export default async function register(req, res) {
   if (req.method === "POST") {
     const { origin } = AbsoluteUrl(req, 'localhost:3000');
     const { email, password } = req.body;
 
-    const exists = await Users.checkEmailExists(email);
+    const user = new Users({ email: { address: email }, password: { hash: password } });
 
-    if (exists)
-      return res.status(409).json({ message: "There is already a registered user with this e-mail." });
-
-    const user = { email: { address: email }, password: password };
-
-    let response;
+    let newUser;
 
     try {
-      response = await UsersDAO.insert(user);
+      newUser = await user.save();
     }
 
     catch (error) {
-      return res.status(400).json({ message: error.message });
+      return handleError(req, res, error);
     }
-
-    if (!response.result.ok)
-      return res.status(500).json({ message: "Error inserting user in the database." });
-
-    const userId  = response.insertedIds[0];
-
-    const session = new Session(req, res);
-    await session.genSecret(userId);
-    await session.genToken(userId);
-
-    const token = await Users.genEmailVerificationToken(userId);
 
     let text = "Welcome!";
     text += "\r\n\r\n";
     text += "To verify your e-mail click the link bellow.";
     text += "\r\n\r\n";
-    text += origin + "/api/user/verifyEmail?token=" + token;
+    text += origin + "/api/user/verifyEmail?token=" + newUser.email.token;
     text += "\r\n\r\n";
     text += "Thanks!";
 
-    response = await Mailer.send("Welcome to Next.js Boilerplate", text, email);
+    const response = await Mailer.send("Welcome to Next.js Boilerplate", text, email);
 
     if (response)
       return res.status(500).json({ message: "Mail server connection error." });

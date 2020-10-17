@@ -1,37 +1,32 @@
-import hash from 'object-hash';
-
-import Session from '../../../lib/session';
-import UsersDAO from '../../../lib/users/server/dao';
+import handleError from '../../../lib/handleError';
+import Sessions from '../../../lib/sessions/dao';
 
 export default async function changePassword(req, res) {
   if (req.method === "POST") {
     const { oldPassword, newPassword } = req.body;
 
-    const session = new Session(req, res);
-
-    const isValid = await session.isValid();
+    const isValid = await Sessions.isValid(req, res);
 
     if (!isValid)
       return res.status(403).json({ message: "Invalid session token." });
 
-    const sessionObj = session.getObject();
-    const userId = sessionObj.userId;
+    const session = await Sessions.findOne().byCookie(req, res).populate('owner');
+    const user = session.owner;
 
-    const password = await UsersDAO.getPassword(userId);
-
-    if (hash(oldPassword) !== password)
+    if (!user.comparePassword(oldPassword))
       return res.status(403).json({ message: "Wrong current password." });
 
     try {
-      await UsersDAO.setPassword(userId, newPassword);
+      user.password.hash = newPassword;
+      await user.save();
     }
 
     catch (error) {
-      return res.status(400).json({ message: error.message });
+      return handleError(req, res, error);
     }
 
-    await session.genSecret(userId);
-    await session.genToken(userId);
+    await session.genSecret();
+    await session.genToken(req, res);
 
     return res.status(201).json({});
   }

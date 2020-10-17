@@ -1,29 +1,34 @@
 import AbsoluteUrl from 'next-absolute-url';
 
+import handleError from '../../../lib/handleError';
 import Mailer from '../../../lib/mailer';
-import Session from '../../../lib/session';
-import Users from '../../../lib/users/server/class';
-import UsersDAO from '../../../lib/users/server/dao';
+import Sessions from '../../../lib/sessions/dao';
+import Users from '../../../lib/users/dao';
 
 export default  async function verifyEmail(req, res) {
   if (req.method === "POST") {
     const { origin } = AbsoluteUrl(req, 'localhost:3000');
 
-    const session = new Session(req, res);
-    const isValid = await session.isValid();
+    const isValid = await Sessions.isValid(req, res);
 
     if (!isValid)
       return res.status(403).json({ message: "Invalid session token." });
 
-    const sessionObj = session.getObject();
-
-    const userId = sessionObj.userId;
-    const user = await UsersDAO.getById(userId);
+    const session = await Sessions.findOne().byCookie(req, res).populate('owner');
+    const user = session.owner;
 
     if (!user)
       return res.status(404).json({ message: "User not found." });
 
-    const token = await Users.genEmailVerificationToken(userId);
+    let token;
+
+    try {
+      token = await user.genEmailVerificationToken();
+    }
+
+    catch (error) {
+      return handleError(req, res, error);
+    }
 
     let text = "Hello!";
     text += "\r\n\r\n";
@@ -45,15 +50,18 @@ export default  async function verifyEmail(req, res) {
   if (req.method === "GET") {
     const { token } = req.query;
 
-    const user = await UsersDAO.getByEmailVerificationToken(token);
+    const user = await Users.findOne().byEmailVerificationToken(token);
 
     if (!user)
-      res.redirect(302, '/?emailVerification=invalidToken');
+      return res.redirect(302, '/?emailVerification=invalidToken');
 
-    const userId = user._id;
-    await UsersDAO.setEmailVerified(userId, true);
+    try {
+      await user.validateEmail();
+    }
 
-    await UsersDAO.unsetEmailVerificationToken(userId);
+    catch (error) {
+      return handleError(req, res, error);
+    }
 
     return res.redirect(302, '/?emailVerification=success');
   }
