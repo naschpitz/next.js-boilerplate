@@ -11,8 +11,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 2. Setup your .env.[local | development | production] variables:
 
     ```
+    APP_SECRET=YourSecretString
+   
     MONGO_URL=mongodb://username:password@host/database_name
-    MONGO_DB_NAME=database_name
 
     MAIL_URL=smtps://username:password@smtp_server:port_number
     MAIL_FROM=Next.js Boilerplate <contact@boilerplate.com>
