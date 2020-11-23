@@ -12,7 +12,7 @@ export default  async function verifyEmail(req, res) {
     const isValid = await Sessions.isValid(req, res);
 
     if (!isValid)
-      return res.status(403).json({ message: "Invalid session token." });
+      return res.status(401).json({ message: "Invalid session token." });
 
     const session = await Sessions.findOne().byCookie(req, res).populate('owner');
     const user = session.owner;
@@ -34,7 +34,7 @@ export default  async function verifyEmail(req, res) {
     text += "\r\n\r\n";
     text += "To verify your e-mail click the link bellow.";
     text += "\r\n\r\n";
-    text += origin + "/api/user/verifyEmail?token=" + token;
+    text += origin + "/api/users/verifyEmail?token=" + token;
     text += "\r\n\r\n";
     text += "Thanks!";
 
