@@ -30,7 +30,7 @@ export default async function recoverPassword(req, res) {
     text += "\r\n\r\n";
     text += "To confirm you wish to reset your password click the link bellow.";
     text += "\r\n\r\n";
-    text += origin + "/api/user/resetPassword?token=" + token;
+    text += origin + "/api/users/resetPassword?token=" + token;
     text += "\r\n\r\n";
     text += "Thanks!";
 
