@@ -9,12 +9,10 @@ export default async function register(req, res) {
     const { origin } = AbsoluteUrl(req, 'localhost:3000');
     const { email, password } = req.body;
 
-    const user = new Users({ email: { address: email }, password: { hash: password } });
-
-    let newUser;
+    let user = new Users({ email: { address: email }, password: { hash: password } });
 
     try {
-      newUser = await user.save();
+      await user.save();
     }
 
     catch (error) {
@@ -25,7 +23,7 @@ export default async function register(req, res) {
     text += "\r\n\r\n";
     text += "To verify your e-mail click the link bellow.";
     text += "\r\n\r\n";
-    text += origin + "/api/user/verifyEmail?token=" + newUser.email.token;
+    text += origin + "/api/users/verifyEmail?token=" + user.email.token;
     text += "\r\n\r\n";
     text += "Thanks!";
 
@@ -34,7 +32,11 @@ export default async function register(req, res) {
     if (response)
       return res.status(500).json({ message: "Mail server connection error." });
 
-    return res.status(201).json({});
+    user = user.toObject();
+    delete user.password;
+    delete user.email.token;
+
+    return res.status(201).json(user);
   }
 
   return res.status(405).json({ message: "Method not allowed." });
