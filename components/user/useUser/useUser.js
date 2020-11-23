@@ -5,23 +5,33 @@ import Fetcher from '../../fetcher/fetcher';
 export default function useUser(origin)  {
   const [ user, setUser ] = useState(null);
 
-  useEffect(() => (updateUser()), []);
+  useEffect(() => (loadUser()), []);
 
-  function updateUser() {
-    Fetcher.fetch('/api/user/info', {
+  async function loadUser(user) {
+    if (user) {
+      setUser(user);
+      return;
+    }
+
+    const url = '/api/users/info';
+
+    const options = {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
-    }, origin).then((response) => {
-      if (!response.ok)
-        return;
+    }
 
-      response.json().then((result) => (setUser(result.user)));
-    });
+    const response = await Fetcher.fetch(url, options, origin);
+
+    if (!response.ok)
+      return;
+
+    const json = await response.json();
+    setUser(json);
   }
 
   function clearUser() {
     setUser(null);
   }
 
-  return [ user, updateUser, clearUser ];
+  return [ user, loadUser, clearUser ];
 }

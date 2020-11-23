@@ -14,7 +14,7 @@ import styles from './login.module.css';
 const Login = (props) => {
   const context = useContext(Context);
 
-  const [ user, updateUser, clearUser ] = context.useUser;
+  const [ user, loadUser, clearUser ] = context.useUser;
   const [ isLoggingIn, setIsLoggingIn ] = useState(false);
   const [ isSendingRecovery, setIsSendingRecovery ] = useState(false);
 
@@ -39,13 +39,15 @@ const Login = (props) => {
       body: JSON.stringify({ email, password })
     };
 
-    const response = await Fetcher.fetch('/api/user/login', options, context.origin);
+    const response = await Fetcher.fetch('/api/users/login', options, context.origin);
 
     if (response.ok) {
+      const user = await response.json();
+
       if (props.onDone)
         props.onDone();
 
-      updateUser();
+      loadUser(user);
     }
 
     else {
@@ -75,7 +77,7 @@ const Login = (props) => {
       body: JSON.stringify({ email })
     };
 
-    const response = await Fetcher.fetch('/api/user/recoverPassword', options, context.origin);
+    const response = await Fetcher.fetch('/api/users/recoverPassword', options, context.origin);
 
     if (response.ok) {
       const message = <span>An e-mail for password recovery has been sent to the registered address. Please check your <strong>SPAM</strong> box you if don't receive it in a few minutes.</span>
@@ -102,7 +104,7 @@ const Login = (props) => {
         <Form.Control ref={emailRef} placeholder="mail@domain.com" required autoFocus type="email"/>
       </Form.Group>
 
-      <Form.Group className="form-group">
+      <Form.Group>
         <Form.Label>Password</Form.Label>
         <Form.Control ref={passwordRef} placeholder="Password" required type="password"/>
       </Form.Group>

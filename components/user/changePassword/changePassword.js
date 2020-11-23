@@ -34,12 +34,12 @@ const ChangePassword = (props) => {
     setIsChangingPassword(true);
 
     const options = {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ oldPassword, newPassword })
     };
 
-    const response = await Fetcher.fetch('/api/user/changePassword', options, context.origin);
+    const response = await Fetcher.fetch('/api/users/changePassword', options, context.origin);
 
     if (response.ok)
       changeMsgId = messageDisplay.show('success', "Password successfully changed.", changeMsgId);
@@ -86,7 +86,7 @@ const ChangePassword = (props) => {
 
   return (
     <Form className={styles.formChangePassword} onSubmit={onFormSubmit}>
-      <Form.Group className="form-group">
+      <Form.Group>
         <Form.Label>Current password</Form.Label>
         <Form.Control ref={oldPasswordRef} placeholder="Current password" required autoFocus type="password"/>
       </Form.Group>

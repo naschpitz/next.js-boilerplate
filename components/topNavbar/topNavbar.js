@@ -5,7 +5,7 @@ import { UniqueModalController } from '@naschpitz/unique-modal';
 import _ from 'lodash';
 
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey, FaUserEdit } from 'react-icons/fa';
+import { FaSignInAlt, FaPlus, FaSignOutAlt, FaSyncAlt, FaKey } from 'react-icons/fa';
 
 import ChangePassword from '../user/changePassword/changePassword';
 import Context from '../context/context';
@@ -17,7 +17,7 @@ import ResetPassword from '../user/resetPassword/resetPassword';
 const TopNavbar = () => {
   const context = useContext(Context);
 
-  const [ user, updateUser, clearUser ] = context.useUser;
+  const [ user, loadUser, clearUser ] = context.useUser;
   const router = useRouter();
 
   const emailVerification = _.get(context, 'emailVerification');
@@ -147,7 +147,7 @@ const TopNavbar = () => {
       headers: { 'Content-Type': 'application/json' }
     };
 
-    const response = await Fetcher.fetch('/api/user/verifyEmail', options, context.origin);
+    const response = await Fetcher.fetch('/api/users/verifyEmail', options, context.origin);
 
     if (response.ok)
       Alert.success("A verification e-mail has been sent to you.");
@@ -161,11 +161,11 @@ const TopNavbar = () => {
   async function onLogoutClick()
   {
     const options = {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' }
     };
 
-    const response = await Fetcher.fetch('/api/user/logout', options, context.origin);
+    const response = await Fetcher.fetch('/api/users/logout', options, context.origin);
 
     if (response.ok)
       clearUser();

@@ -39,7 +39,7 @@ const Register = (props) => {
       body: JSON.stringify({ email, password })
     };
 
-    const response = await Fetcher.fetch('/api/user/register', options, context.origin);
+    const response = await Fetcher.fetch('/api/users/register', options, context.origin);
 
     if (response.ok)
       registerMsgId = messageDisplay.show('success', "User successfully registered. A verification e-mail has been sent to you.", registerMsgId);
@@ -60,7 +60,7 @@ const Register = (props) => {
       headers: { 'Content-Type': 'application/json' },
     };
 
-    const response = await Fetcher.fetch('/api/user/checkEmailExists?email=' + email, options, context.origin);
+    const response = await Fetcher.fetch('/api/users/checkEmailExists?email=' + email, options, context.origin);
 
     const messageDisplay = messageDisplayRef.current;
     messageDisplay.hide(existsMsgId);
@@ -115,7 +115,7 @@ const Register = (props) => {
 
   return (
     <Form className={styles.formRegister} onSubmit={onFormSubmit}>
-      <Form.Group className="form-group">
+      <Form.Group>
         <Form.Label>E-mail</Form.Label>
         <Form.Control ref={emailRef} onChange={onEmailChange} placeholder="mail@domain.com" required autoFocus type="email"/>
       </Form.Group>
