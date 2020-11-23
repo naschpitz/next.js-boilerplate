@@ -2,13 +2,16 @@ import handleError from '../../../lib/handleError';
 import Sessions from '../../../lib/sessions/dao';
 
 export default async function changePassword(req, res) {
-  if (req.method === "POST") {
-    const { oldPassword, newPassword } = req.body;
-
+  if (req.method === "PUT") {
     const isValid = await Sessions.isValid(req, res);
 
     if (!isValid)
-      return res.status(403).json({ message: "Invalid session token." });
+      return res.status(401).json({ message: "Invalid session token." });
+
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword)
+      return res.status(400).json({ message: "Missing fields to login." });
 
     const session = await Sessions.findOne().byCookie(req, res).populate('owner');
     const user = session.owner;
@@ -28,7 +31,7 @@ export default async function changePassword(req, res) {
     await session.genSecret();
     await session.genToken(req, res);
 
-    return res.status(201).json({});
+    return res.status(200).json({});
   }
 
   return res.status(405).json({ message: "Method not allowed." });
